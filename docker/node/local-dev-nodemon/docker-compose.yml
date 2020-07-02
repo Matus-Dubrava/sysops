@@ -1,0 +1,12 @@
+version: '2.2'
+
+services:
+    web:
+        build: .
+        command: 'nodemon app.js'
+        ports:
+            - '5000:5000'
+        volumes:
+            - ./:/node/app
+        environment:
+            - NODE_ENV=development
