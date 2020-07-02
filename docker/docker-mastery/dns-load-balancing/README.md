@@ -8,6 +8,7 @@ docker network create dns_test
 
 ## create two containers from the image and specify different return messages via environment variable MESSAGE
 docker container run --network test_dns --network-alias server -e MESSAGE=server1 app
+
 docker container run --network test_dns --network-alias server -e MESSAGE=server2 app
 
 ## test whether domain name lookup returns ip address of both containers (using alpine image)
