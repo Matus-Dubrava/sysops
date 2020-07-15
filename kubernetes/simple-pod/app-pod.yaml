@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+spec:
+  containers:
+    - image: app
+      name: app
+      imagePullPolicy: Never
+      ports:
+        - containerPort: 8080
+          protocol: TCP
