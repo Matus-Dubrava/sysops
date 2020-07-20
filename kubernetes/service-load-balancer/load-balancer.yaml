@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: lb-app-depl
+spec:
+    replicas: 6
+    selector:
+        matchLabels:
+            app: lb-app
+    template:
+        metadata:
+            labels:
+                app: lb-app
+        spec:
+            containers:
+                - name: lb-app
+                  image: matusdubrava/hostname-reporter
+                  imagePullPolicy: IfNotPresent
+                  ports:
+                      - containerPort: 5000
+                        name: http
+                        protocol: TCP
+                  livenessProbe:
+                      initialDelaySeconds: 30
+                      httpGet:
+                          port: 5000
+                          path: /
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: lb-app-serv
+spec:
+    type: LoadBalancer
+    selector:
+        app: lb-app
+    ports:
+        - port: 80
+          targetPort: http
+          nodePort: 30000
+          name: http
+          protocol: TCP
