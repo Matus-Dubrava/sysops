@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: example-depl
+spec:
+    replicas: 6
+    selector:
+        matchLabels:
+            app: example
+    template:
+        metadata:
+            labels:
+                app: example
+        spec:
+            containers:
+                - image: nginx
+                  name: nginx
+                  imagePullPolicy: IfNotPresent
+                  ports:
+                      - containerPort: 80
+                        name: http
+                        protocol: TCP
+                  volumeMounts:
+                      - name: web-data
+                        mountPath: /usr/share/nginx/html
+                  livenessProbe:
+                      initialDelaySeconds: 30
+                      httpGet:
+                          path: /
+                          port: 80
+                - image: matusdubrava/fortune
+                  name: fortune
+                  imagePullPolicy: IfNotPresent
+                  volumeMounts:
+                      - name: web-data
+                        mountPath: /var/htdocs
+            volumes:
+                - name: web-data
+                  emptyDir:
+                      medium: Memory
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: example-serv
+spec:
+    type: NodePort
+    selector:
+        app: example
+    ports:
+        - port: 80
+          targetPort: http
+          nodePort: 30000
+          protocol: TCP
+          name: http
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: example-ingress
+spec:
+    rules:
+        - http:
+              paths:
+                  - path: /
+                    backend:
+                        serviceName: example-serv
+                        servicePort: http
