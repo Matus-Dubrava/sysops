@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+    name: fortune-pod
+spec:
+    containers:
+        - name: fortune
+          image: matusdubrava/fortune:env
+          env:
+              - name: INTERVAL
+                valueFrom:
+                    configMapKeyRef:
+                        key: sleep-interval
+                        name: fortune-config
