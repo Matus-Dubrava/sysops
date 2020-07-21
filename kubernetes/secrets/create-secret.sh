@@ -1,0 +1,1 @@
+kubectl create secret generic fortune-https --from-file=foo --from-file=https.key --from-file=https.cert
