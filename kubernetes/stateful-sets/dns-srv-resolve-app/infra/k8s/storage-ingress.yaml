@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+    name: storage-ingress
+    annotations:
+        kubernetes.io/service.class: 'nginx'
+spec:
+    rules:
+        - http:
+              paths:
+                  - path: /api/storage
+                    backend:
+                        serviceName: storage-clusterip-service
+                        servicePort: http

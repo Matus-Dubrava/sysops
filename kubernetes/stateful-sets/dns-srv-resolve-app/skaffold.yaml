@@ -1,0 +1,22 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+    name: storage-config
+build:
+    local:
+        push: false
+    artifacts:
+        - image: stateful
+          context: ./storage-app
+          docker:
+              dockerfile: Dockerfile
+          sync:
+              manual:
+                  - src: 'src/**/*.js'
+                    dest: .
+                  - src: 'src/*.js'
+                    dest: .
+deploy:
+    kubectl:
+        manifests:
+            - infra/k8s/*.yaml
